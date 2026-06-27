@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS post_comments;
+DROP TABLE IF EXISTS appuser;
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS posts;
