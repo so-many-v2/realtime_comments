@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"so-many-v2/realtime_comments/pkg/errors/db_errors"
-	"so-many-v2/realtime_comments/services/post_service/repository/models"
+	"so-many-v2/realtime_comments/services/models"
 )
 
 func (r *PgRepo) GetPostById(ctx context.Context, postID uint) (*models.Post, error) {

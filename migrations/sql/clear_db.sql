@@ -1,0 +1,1 @@
+TRUNCATE TABLE post_comments, comment, posts, appuser RESTART IDENTITY CASCADE;
