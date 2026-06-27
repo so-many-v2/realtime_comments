@@ -23,10 +23,10 @@ func (r *PgRepo) GetPostById(ctx context.Context, postID uint) (*models.Post, er
 }
 
 func (r *PgRepo) CreatePost(ctx context.Context, post *models.CreatePost) (uint, error) {
-	stmt := "INSERT INTO posts (title, text) VALUES ($1, $2) RETURNING id"
+	stmt := "INSERT INTO posts (user_id, title, text) VALUES ($1, $2, $3) RETURNING id"
 
 	var postID uint
-	err := r.DB.QueryRowContext(ctx, stmt, post.Title, post.Text).Scan(&postID)
+	err := r.DB.QueryRowContext(ctx, stmt, post.UserID, post.Title, post.Text).Scan(&postID)
 	if err != nil {
 		return 0, err
 	}

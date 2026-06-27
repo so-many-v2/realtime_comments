@@ -21,4 +21,8 @@ reup:
 	docker-compose down
 	docker-compose up --build -d
 
+reset_database:
+	docker-compose down -v
+	docker-compose up --build -d
+
 

@@ -6,9 +6,9 @@ import (
 )
 
 type CreatePostSchema struct {
-	Text     string `json:"text"`
-	Title    string `json:"title"`
-	AuthorID uint   `json:"author_id"` // TODO: Send as JWT
+	Text   string `json:"text"`
+	Title  string `json:"title"`
+	UserID uint   `json:"user_id"` // TODO: Send as JWT
 }
 
 func (cp *CreatePostSchema) Validate() error {
@@ -18,7 +18,7 @@ func (cp *CreatePostSchema) Validate() error {
 	if cp.Text == "" {
 		return agg_errors.ValidationError{Field: "text", Msg: "empty text"}
 	}
-	if cp.AuthorID == 0 {
+	if cp.UserID == 0 {
 		return agg_errors.ValidationError{Field: "author", Msg: "empty author"}
 	}
 	return nil
@@ -26,8 +26,8 @@ func (cp *CreatePostSchema) Validate() error {
 
 func (ps *CreatePostSchema) ToModel() *models.CreatePost {
 	return &models.CreatePost{
-		Title:    ps.Title,
-		Text:     ps.Text,
-		AuthorID: ps.AuthorID,
+		Title:  ps.Title,
+		Text:   ps.Text,
+		UserID: ps.UserID,
 	}
 }

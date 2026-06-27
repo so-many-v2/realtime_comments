@@ -27,8 +27,8 @@ func NewPostgresConfig() *PostgresConfig {
 		port:     os.Getenv("POSTGRES_PORT"),
 		name:     os.Getenv("POSTGRES_NAME"),
 
-		MaxOpenConns:    25,
-		MaxIdleConns:    25,
+		MaxOpenConns:    80,
+		MaxIdleConns:    80,
 		ConnMaxLifetime: 30 * time.Minute,
 		ConnMaxIdleTime: 5 * time.Minute,
 	}
