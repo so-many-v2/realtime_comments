@@ -41,6 +41,6 @@ stress_comment:
 
 # Linter cmd
 lint:
-	golangci run ./...
+	golangci-lint run ./...
 
 

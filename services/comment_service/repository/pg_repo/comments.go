@@ -26,7 +26,7 @@ func (r *PgRepo) CreateComment(ctx context.Context, comment *models.CreateCommen
 	if err != nil {
 		return nil, err
 	}
-	defer trx.Rollback()
+	defer func() { _ = trx.Rollback() }()
 
 	insertCommentStmt := "INSERT INTO comment (text, user_id) VALUES ($1, $2) RETURNING *"
 	insertM2mStmt := "INSERT INTO post_comments (post_id, comment_id) VALUES ($1, $2) RETURNING id"
@@ -52,7 +52,7 @@ func (r *PgRepo) CreateComment(ctx context.Context, comment *models.CreateCommen
 	if err = trx.Commit(); err != nil {
 		return nil, err
 	}
-	
+
 	newComment.PostID = comment.PostID
 	return &newComment, nil
 }

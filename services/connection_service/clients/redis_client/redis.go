@@ -39,7 +39,7 @@ func NewRedisClient(ctx context.Context, logger *logg.Logger, cfg config.RedisCo
 
 
 func (rc *RedisClient) SubscribeChannel(ctx context.Context, pattern string) (<-chan *redis.Message, error) {
-	sub := rc.Client.PSubscribe(ctx, pattern)
+	sub := rc.PSubscribe(ctx, pattern)
 
 	if _, err := sub.Receive(ctx); err != nil {
 		rc.logger.WithField("event", "psubscribe").
