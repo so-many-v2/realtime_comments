@@ -98,3 +98,49 @@ App ready!
 
 1) make load_comment && make load_post - works ok without fails
 2) make stress_comment - shows that service keeps **p95=300ms** serving around 4k rps
+
+
+## Project Structure
+
+```
+cmd/
+  post_service/         Entrypoint
+  comment_service/      Entrypoint
+  connection_service/   Entrypoint
+
+services/
+  models/               Shared domain models (Post, Comment, User)
+
+  post_service/         Post CRUD over Postgres
+    app/                Bootstrap & wiring 
+    config/             Service / Postgres config
+    delivery/http/      HTTP layer: router + handlers 
+    service/            Business logic + repository port interface
+    repository/         Postgres adapter 
+
+  comment_service/      Comment CRUD + publishes new comments to Redis
+    app/                Bootstrap & wiring
+    config/             Service / Postgres / Redis config
+    delivery/http/      HTTP layer: router + handlers
+    service/comment/    Business logic; ports for repo + Redis publisher
+      test/             Unit tests with generated mockery mocks
+    repository/pg_repo/ Postgres adapter 
+    clients/redis_client/  Redis PUBLISH client
+
+  connection_service/   Holds SSE connections, fans out comments in realtime
+    app/                Bootstrap; PSUBSCRIBE post:* → broadcast loop
+    config/             Service / Redis config
+    delivery/http/      SSE handler + router
+    service/connection/ In-memory subscriber registry 
+    clients/redis_client/  Redis PSUBSCRIBE client
+
+pkg/                    Shared infrastructure 
+  http_tools/           HTTP server, CORS, request decode, response/error helpers
+  logg/                 Structured logger
+  errors/               Typed errors
+
+migrations/             SQL schema + setup/clear helpers
+nginx/                  API gateway config 
+frontend/               Vue SPA
+docker-compose.yaml     Postgres, Redis, services, frontend
+```
