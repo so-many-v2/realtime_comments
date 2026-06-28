@@ -7,7 +7,7 @@ realtime delivery, fronted by an nginx gateway.
 
 ![Architecture](architecture.png)
 
-- **Client** — browser.
+- **Client (Full AI generated)** — browser.
 - **API Gateway (nginx)** — single entry point / routing.
 - **Post service** — Post CRUD.
 - **Comment service** — Comments CRUD and
