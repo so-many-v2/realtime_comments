@@ -89,7 +89,7 @@ services:
       - redis
     restart: always
 
-  nginx:
+  frontend:
     build:
       context: .
       dockerfile: builds/frontend/Dockerfile
