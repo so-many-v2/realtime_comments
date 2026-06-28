@@ -1,6 +1,0 @@
-linters:
-  enable:
-    - gofmt
-    - goimports
-    - govet
-    - errcheck

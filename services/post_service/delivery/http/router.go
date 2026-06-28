@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"so-many-v2/realtime_comments/pkg/http_tools"
 	"so-many-v2/realtime_comments/pkg/logg"
 	"so-many-v2/realtime_comments/services/post_service/delivery/http/handlers"
 	"so-many-v2/realtime_comments/services/post_service/service"
@@ -25,6 +26,7 @@ func NewRouter(logg *logg.Logger, serv *service.Service) *Router {
 func (ro *Router) Init() http.Handler {
 	router := chi.NewRouter()
 
+	router.Use(http_tools.CORS)
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.Logger)
 

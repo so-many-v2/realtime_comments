@@ -38,7 +38,7 @@ export default function () {
     user_id: 1,
   });
 
-  const createRes = http.post(`${BASE_URL}/posts`, payload, params);
+  const createRes = http.post(`${BASE_URL}/api/posts`, payload, params);
   const createdOK = check(createRes, {
     'create -> 201': (r) => r.status === 201,
     'create has post_id': (r) => r.json('post_id') !== undefined,
@@ -47,7 +47,7 @@ export default function () {
 
   if (createRes.status === 201) {
     const postId = createRes.json('post_id');
-    const getRes = http.get(`${BASE_URL}/posts/${postId}`);
+    const getRes = http.get(`${BASE_URL}/api/posts/${postId}`);
     const gotOK = check(getRes, {
       'get -> 200': (r) => r.status === 200,
     });

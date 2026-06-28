@@ -89,6 +89,19 @@ services:
       - redis
     restart: always
 
+  nginx:
+    build:
+      context: .
+      dockerfile: builds/frontend/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - post_service
+      - comment_service
+      - connection_service_1
+      - connection_service_2
+    restart: always
+
 volumes:
   pg_data:
   redis_data:

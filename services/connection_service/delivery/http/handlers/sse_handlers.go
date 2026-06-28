@@ -28,7 +28,7 @@ func (rh *RouterHandler) SSEHandler(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
-	
+
 	channel := fmt.Sprintf("post:%d", postID)
 	sub := rh.service.Connections.Add(channel)
 	defer rh.service.Connections.Remove(channel, sub)

@@ -40,6 +40,6 @@ export default function () {
   const payload = JSON.stringify({ text: 'stress', user_id: userID, post_id: postID });
   const params = { headers: { 'Content-Type': 'application/json' } };
 
-  const res = http.post(`${BASE_URL}/comments`, payload, params);
+  const res = http.post(`${BASE_URL}/api/comments`, payload, params);
   errorRate.add(!check(res, { 'create -> 201': (r) => r.status === 201 }));
 }

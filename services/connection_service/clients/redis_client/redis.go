@@ -37,7 +37,6 @@ func NewRedisClient(ctx context.Context, logger *logg.Logger, cfg config.RedisCo
 	}, nil
 }
 
-
 func (rc *RedisClient) SubscribeChannel(ctx context.Context, pattern string) (<-chan *redis.Message, error) {
 	sub := rc.PSubscribe(ctx, pattern)
 

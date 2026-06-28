@@ -44,7 +44,7 @@ export default function () {
   });
   const params = { headers: { 'Content-Type': 'application/json' } };
 
-  const res = http.post(`${BASE_URL}/comments`, payload, params);
+  const res = http.post(`${BASE_URL}/api/comments`, payload, params);
   const ok = check(res, {
     'create -> 201': (r) => r.status === 201,
     'has comment_id': (r) => r.json('comment_id') !== undefined,
