@@ -5,7 +5,7 @@ realtime delivery, fronted by an nginx gateway.
 
 ## Architecture
 
-![Architecture](architecture.png)
+![Architecture](Architecture.png)
 
 - **Client (Full AI generated)** — browser.
 - **API Gateway (nginx)** — single entry point / routing.
