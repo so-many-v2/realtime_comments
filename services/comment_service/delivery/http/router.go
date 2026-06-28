@@ -30,7 +30,7 @@ func (ro *Router) Init() http.Handler {
 
 	handler := handlers.NewRouterHandler(ro.logger, ro.service)
 
-	router.Group(func(r chi.Router) {
+	router.Route("/api", func(r chi.Router) {
 		r.Get("/comments", handler.GetPostHandler)
 		r.Post("/comments", handler.CreatePostHandler)
 	})

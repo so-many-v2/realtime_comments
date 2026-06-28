@@ -39,4 +39,8 @@ load_comment:
 stress_comment:
 	k6 run tests/load/comment_stress.js
 
+# Linter cmd
+lint:
+	golangci run ./...
+
 

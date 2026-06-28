@@ -30,9 +30,10 @@ func (ro *Router) Init() http.Handler {
 
 	handler := handlers.NewRouterHandler(ro.logger, ro.service)
 
-	router.Group(func(r chi.Router) {
-		r.Get("/post/{postID}", handler.GetPostHandler)
-		r.Post("/post", handler.CreatePostHandler)
+	router.Route("/api", func(r chi.Router) {
+		r.Get("/posts", handler.ListPostsHandler)
+		r.Get("/posts/{postID}", handler.GetPostHandler)
+		r.Post("/posts", handler.CreatePostHandler)
 	})
 
 	return router

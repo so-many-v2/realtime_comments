@@ -9,8 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"so-many-v2/realtime_comments/pkg/logg"
-	"so-many-v2/realtime_comments/services/post_service/delivery/http/types"
-	"so-many-v2/realtime_comments/services/post_service/repository/models"
+	"so-many-v2/realtime_comments/services/models"
 	"so-many-v2/realtime_comments/services/post_service/service/posts"
 	"so-many-v2/realtime_comments/services/post_service/service/posts/test/mocks"
 )
@@ -56,15 +55,15 @@ func TestCreatePost_OK(t *testing.T) {
 		Run(func(ctx context.Context, p *models.CreatePost) {
 			require.Equal(t, "title", p.Title)
 			require.Equal(t, "text", p.Text)
-			require.Equal(t, uint(5), p.AuthorID)
+			require.Equal(t, uint(5), p.UserID)
 		}).
 		Return(uint(7), nil).
 		Once()
 
-	id, err := NewPostServiceTest(repo).CreatePost(context.Background(), &types.CreatePostSchema{
-		Title:    "title",
-		Text:     "text",
-		AuthorID: 5,
+	id, err := NewPostServiceTest(repo).CreatePost(context.Background(), &models.CreatePost{
+		Title:  "title",
+		Text:   "text",
+		UserID: 5,
 	})
 
 	require.NoError(t, err)
@@ -80,10 +79,10 @@ func TestCreatePost_RepoError(t *testing.T) {
 		Return(uint(0), repoErr).
 		Once()
 
-	id, err := NewPostServiceTest(repo).CreatePost(context.Background(), &types.CreatePostSchema{
-		Title:    "t",
-		Text:     "body",
-		AuthorID: 1,
+	id, err := NewPostServiceTest(repo).CreatePost(context.Background(), &models.CreatePost{
+		Title:  "t",
+		Text:   "body",
+		UserID: 1,
 	})
 
 	require.ErrorIs(t, err, repoErr)

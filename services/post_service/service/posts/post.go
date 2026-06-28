@@ -9,6 +9,7 @@ import (
 //go:generate mockery --name=PostRepoI --output=./test/mocks --outpkg=mocks --filename=PostRepoI.go --with-expecter
 type PostRepoI interface {
 	GetPostById(ctx context.Context, postID uint) (*models.Post, error)
+	ListPosts(ctx context.Context, limit, offset uint) ([]models.Post, error)
 	CreatePost(ctx context.Context, post *models.CreatePost) (uint, error)
 }
 type PostService struct {
@@ -34,6 +35,20 @@ func (ps *PostService) CreatePost(ctx context.Context, data *models.CreatePost) 
 		return 0, err
 	}
 	return postId, nil
+}
+
+func (ps *PostService) ListPosts(ctx context.Context, limit, offset uint) ([]models.Post, error) {
+	const defaultLimit, maxLimit = 20, 100
+	if limit == 0 || limit > maxLimit {
+		limit = defaultLimit
+	}
+
+	posts, err := ps.repo.ListPosts(ctx, limit, offset)
+	if err != nil {
+		ps.logger.WithField("event", "list_posts").WithError(err).Error("list posts error")
+		return nil, err
+	}
+	return posts, nil
 }
 
 func (ps *PostService) GetPost(ctx context.Context, postID uint) (*models.Post, error) {

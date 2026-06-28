@@ -23,6 +23,19 @@ func NewHttpServer(address string, router http.Handler) *HttpServer {
 	}
 }
 
+func NewStreamingServer(address string, router http.Handler) *HttpServer {
+	return &HttpServer{
+		server: &http.Server{
+			Addr:           address,
+			Handler:        router,
+			MaxHeaderBytes: MaxHeadersSize,
+			ReadTimeout:    time.Second * ReadTimeOutSec,
+			WriteTimeout:   0,
+			IdleTimeout:    0,
+		},
+	}
+}
+
 func (hs *HttpServer) StartServer() error {
 	if err := hs.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err

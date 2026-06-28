@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"so-many-v2/realtime_comments/pkg/http_tools"
 	"so-many-v2/realtime_comments/pkg/logg"
+	"so-many-v2/realtime_comments/services/comment_service/clients/redis_client"
 	"so-many-v2/realtime_comments/services/comment_service/config"
 	http_router "so-many-v2/realtime_comments/services/comment_service/delivery/http"
 	"so-many-v2/realtime_comments/services/comment_service/repository/pg_repo"
@@ -33,9 +34,13 @@ func StartApp() {
 
 	repo, err := pg_repo.NewPostgres(ctx, cfg.Postgres)
 	if err != nil {
-		logger.WithError(err).Fatal("postgres init failed")
+		logger.WithError(err).Fatal("postgres init error")
 	}
-	serv := service.NewService(logger, repo)
+	redis, err := redis_client.NewRedisClient(ctx, cfg.Redis)
+	if err != nil {
+		logger.WithError(err).Fatal("redis init error")
+	}
+	serv := service.NewService(logger, repo, redis)
 	router := http_router.NewRouter(logger, serv)
 	httpServer := http_tools.NewHttpServer(
 		fmt.Sprintf(":%s", cfg.Server.Port),

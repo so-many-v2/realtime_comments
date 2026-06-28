@@ -34,6 +34,31 @@ func (rh *RouterHandler) GetPostHandler(w http.ResponseWriter, req *http.Request
 	http_tools.JSON(w, http.StatusOK, post)
 }
 
+func (rh *RouterHandler) ListPostsHandler(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
+
+	var limit uint = 20
+	if raw := req.URL.Query().Get("limit"); raw != "" {
+		if v, err := strconv.ParseUint(raw, 10, 64); err == nil {
+			limit = uint(v)
+		}
+	}
+
+	var offset uint = 0
+	if raw := req.URL.Query().Get("offset"); raw != "" {
+		if v, err := strconv.ParseUint(raw, 10, 64); err == nil {
+			offset = uint(v)
+		}
+	}
+
+	posts, err := rh.service.Post.ListPosts(ctx, limit, offset)
+	if err != nil {
+		http_tools.Error(w, http.StatusInternalServerError, http_errors.ErrServerError)
+		return
+	}
+	http_tools.JSON(w, http.StatusOK, posts)
+}
+
 func (rh *RouterHandler) CreatePostHandler(w http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 	var postData models.CreatePost

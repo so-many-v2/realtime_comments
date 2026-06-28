@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	models "so-many-v2/realtime_comments/services/post_service/repository/models"
+	models "so-many-v2/realtime_comments/services/models"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -134,6 +134,66 @@ func (_c *PostRepoI_GetPostById_Call) Return(_a0 *models.Post, _a1 error) *PostR
 }
 
 func (_c *PostRepoI_GetPostById_Call) RunAndReturn(run func(context.Context, uint) (*models.Post, error)) *PostRepoI_GetPostById_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListPosts provides a mock function with given fields: ctx, limit, offset
+func (_m *PostRepoI) ListPosts(ctx context.Context, limit uint, offset uint) ([]models.Post, error) {
+	ret := _m.Called(ctx, limit, offset)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListPosts")
+	}
+
+	var r0 []models.Post
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, uint, uint) ([]models.Post, error)); ok {
+		return rf(ctx, limit, offset)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, uint, uint) []models.Post); ok {
+		r0 = rf(ctx, limit, offset)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Post)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, uint, uint) error); ok {
+		r1 = rf(ctx, limit, offset)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// PostRepoI_ListPosts_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListPosts'
+type PostRepoI_ListPosts_Call struct {
+	*mock.Call
+}
+
+// ListPosts is a helper method to define mock.On call
+//   - ctx context.Context
+//   - limit uint
+//   - offset uint
+func (_e *PostRepoI_Expecter) ListPosts(ctx interface{}, limit interface{}, offset interface{}) *PostRepoI_ListPosts_Call {
+	return &PostRepoI_ListPosts_Call{Call: _e.mock.On("ListPosts", ctx, limit, offset)}
+}
+
+func (_c *PostRepoI_ListPosts_Call) Run(run func(ctx context.Context, limit uint, offset uint)) *PostRepoI_ListPosts_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(uint), args[2].(uint))
+	})
+	return _c
+}
+
+func (_c *PostRepoI_ListPosts_Call) Return(_a0 []models.Post, _a1 error) *PostRepoI_ListPosts_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *PostRepoI_ListPosts_Call) RunAndReturn(run func(context.Context, uint, uint) ([]models.Post, error)) *PostRepoI_ListPosts_Call {
 	_c.Call.Return(run)
 	return _c
 }

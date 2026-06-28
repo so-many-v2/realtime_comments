@@ -67,7 +67,7 @@ func (cs *CommentsService) CreateComment(ctx context.Context, data *models.Creat
 }
 
 func (cs *CommentsService) sendComment(ctx context.Context, comment *models.Comment) error {
-	queueName := fmt.Sprintf("post:%d", comment.ID)
+	queueName := fmt.Sprintf("post:%d", comment.PostID)
 	payload, err := json.Marshal(comment)
 	if err != nil {
 		cs.logger.WithField("event", "stringify comment").WithError(err).Error("error stringify comment")

@@ -22,6 +22,17 @@ func (r *PgRepo) GetPostById(ctx context.Context, postID uint) (*models.Post, er
 	return &post, nil
 }
 
+func (r *PgRepo) ListPosts(ctx context.Context, limit, offset uint) ([]models.Post, error) {
+	stmt := "SELECT * FROM posts ORDER BY created DESC LIMIT $1 OFFSET $2"
+
+	posts := make([]models.Post, 0, limit)
+	if err := r.DB.SelectContext(ctx, &posts, stmt, limit, offset); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
 func (r *PgRepo) CreatePost(ctx context.Context, post *models.CreatePost) (uint, error) {
 	stmt := "INSERT INTO posts (user_id, title, text) VALUES ($1, $2, $3) RETURNING id"
 
