@@ -21,6 +21,19 @@ clear_db:
 setup_db:
 	docker compose exec -T postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_NAME) < $(MIGRATIONS_DIR)/sql/setup_db.sql
 
+db_init:
+	docker compose up -d postgres
+	@echo "waiting for postgres..."
+	@until docker compose exec -T postgres pg_isready -U $(POSTGRES_USER) -d $(POSTGRES_NAME) >/dev/null 2>&1; do sleep 1; done
+	$(MAKE) migrate
+	$(MAKE) setup_db
+	@echo "DB ready"
+
+db_drop:
+	docker compose down -v
+
+db_reset: db_drop db_init
+
 # Compose cmd
 run_compose:
 	docker-compose up --build -d
