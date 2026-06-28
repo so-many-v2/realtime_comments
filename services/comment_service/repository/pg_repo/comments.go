@@ -7,10 +7,11 @@ import (
 )
 
 func (r *PgRepo) GetCommentButch(ctx context.Context, postID uint, timeFrom time.Time, limit uint) ([]models.Comment, error) {
-	stmt := `SELECT * FROM comment c
+	stmt := `SELECT c.id, c.user_id, pc.post_id, c.text, c.created, c.updated
+			 FROM comment c
 			 JOIN post_comments pc on pc.comment_id = c.id
 			 WHERE pc.post_id = $1 AND c.created > $2
-			 ORDER BY c.created 
+			 ORDER BY c.created
 			 LIMIT $3`
 
 	comments := make([]models.Comment, 0, limit)
