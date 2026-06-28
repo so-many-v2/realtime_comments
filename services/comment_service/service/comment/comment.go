@@ -10,11 +10,13 @@ import (
 	"time"
 )
 
+//go:generate mockery --name=CommentsRepoI --output=./test/mocks --outpkg=mocks --filename=CommentsRepoI.go --with-expecter
 type CommentsRepoI interface {
 	GetCommentButch(ctx context.Context, postID uint, timeFrom time.Time, limit uint) ([]models.Comment, error)
 	CreateComment(ctx context.Context, comment *models.CreateComment) (*models.Comment, error)
 }
 
+//go:generate mockery --name=RedisClientI --output=./test/mocks --outpkg=mocks --filename=RedisClientI.go --with-expecter
 type RedisClientI interface {
 	Publish(ctx context.Context, channel string, payload []byte) error
 }
