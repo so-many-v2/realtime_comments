@@ -27,7 +27,7 @@ A new comment path: `POST /api/comments` → store in PostgreSQL → publish to 
 
 - Low latency for receiving a comment: **p95 = 300 ms**
 - Realtime delivery
-- **100k concurrent connections** (~10k per instance → ~10 instances)
+- **100k concurrent connections** (2 instances more than enough)
 - **1k write rps** (real traffic ~ 1k / 60 ≈ 17 rps)
 
 ## Entities
