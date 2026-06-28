@@ -27,7 +27,6 @@ export const options = {
       ],
     },
   },
-  // abortOnFail: как только пробьём пороги — тест останавливается (вот тут он и "лёг")
   thresholds: {
     http_req_failed: [{ threshold: 'rate<0.02' }],
     http_req_duration: [{ threshold: 'p(95)<300', abortOnFail: true }],

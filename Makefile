@@ -29,7 +29,6 @@ reup:
 	docker-compose down
 	docker-compose up --build -d
 
-
 # K6 cmd
 load_post:
 	k6 run tests/load/post_service.js

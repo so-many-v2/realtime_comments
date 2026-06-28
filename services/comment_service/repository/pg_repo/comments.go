@@ -1,4 +1,4 @@
-package repository
+package pg_repo
 
 import (
 	"context"
@@ -21,37 +21,37 @@ func (r *PgRepo) GetCommentButch(ctx context.Context, postID uint, timeFrom time
 	return comments, nil
 }
 
-func (r *PgRepo) CreateComment(ctx context.Context, comment *models.CreateComment) (uint, error) {
+func (r *PgRepo) CreateComment(ctx context.Context, comment *models.CreateComment) (*models.Comment, error) {
 	trx, err := r.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	defer trx.Rollback()
 
-	insertCommentStmt := "INSERT INTO comment (text, user_id) VALUES ($1, $2) RETURNING id"
+	insertCommentStmt := "INSERT INTO comment (text, user_id) VALUES ($1, $2) RETURNING *"
 	insertM2mStmt := "INSERT INTO post_comments (post_id, comment_id) VALUES ($1, $2) RETURNING id"
 
-	var commentID uint
+	var newComment models.Comment
 	if err = trx.QueryRowContext(
 		ctx, insertCommentStmt,
 		comment.Text,
 		comment.UserID,
-	).Scan(&commentID); err != nil {
-		return 0, err
+	).Scan(&comment); err != nil {
+		return nil, err
 	}
 
 	if _, err = trx.ExecContext(
 		ctx,
 		insertM2mStmt,
 		comment.PostID,
-		commentID,
+		newComment.ID,
 	); err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if err = trx.Commit(); err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return commentID, nil
+	return &newComment, nil
 }

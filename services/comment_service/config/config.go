@@ -10,6 +10,7 @@ type Config struct {
 	General  *GeneralConfig
 	Server   *ServerConfig
 	Postgres *PostgresConfig
+	Redis    *RedisConfig
 }
 
 type GeneralConfig struct {
@@ -29,6 +30,7 @@ func NewConfig() *Config {
 	return &Config{
 		Server:   NewServerConfig(),
 		Postgres: NewPostgresConfig(),
+		Redis:    NewRedisConfig(),
 		General: &GeneralConfig{
 			AppName: "Comment service",
 			Debug:   debug,

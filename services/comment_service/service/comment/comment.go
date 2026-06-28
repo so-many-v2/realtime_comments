@@ -2,6 +2,8 @@ package comment
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"so-many-v2/realtime_comments/pkg/errors/agg_errors"
 	"so-many-v2/realtime_comments/pkg/logg"
 	"so-many-v2/realtime_comments/services/models"
@@ -10,18 +12,24 @@ import (
 
 type CommentsRepoI interface {
 	GetCommentButch(ctx context.Context, postID uint, timeFrom time.Time, limit uint) ([]models.Comment, error)
-	CreateComment(ctx context.Context, comment *models.CreateComment) (uint, error)
+	CreateComment(ctx context.Context, comment *models.CreateComment) (*models.Comment, error)
+}
+
+type RedisClientI interface {
+	Publish(ctx context.Context, channel string, payload []byte) error
 }
 
 type CommentsService struct {
 	logger *logg.Logger
 	repo   CommentsRepoI
+	redis  RedisClientI
 }
 
-func NewCommentsService(logger *logg.Logger, repo CommentsRepoI) *CommentsService {
+func NewCommentsService(logger *logg.Logger, repo CommentsRepoI, redis RedisClientI) *CommentsService {
 	return &CommentsService{
 		logger: logger,
 		repo:   repo,
+		redis:  redis,
 	}
 }
 
@@ -48,10 +56,27 @@ func (cs *CommentsService) CreateComment(ctx context.Context, data *models.Creat
 		return 0, err
 	}
 
-	commentId, err := cs.repo.CreateComment(ctx, data)
+	comment, err := cs.repo.CreateComment(ctx, data)
 	if err != nil {
 		cs.logger.WithField("event", "create_comment").WithError(err).Error("create comments error")
 		return 0, err
 	}
-	return commentId, err
+
+	_ = cs.sendComment(ctx, comment)
+	return comment.ID, err
+}
+
+func (cs *CommentsService) sendComment(ctx context.Context, comment *models.Comment) error {
+	queueName := fmt.Sprintf("post:%d", comment.ID)
+	payload, err := json.Marshal(comment)
+	if err != nil {
+		cs.logger.WithField("event", "stringify comment").WithError(err).Error("error stringify comment")
+		return err
+	}
+
+	if err := cs.redis.Publish(ctx, queueName, payload); err != nil {
+		cs.logger.WithField("event", "publish comment").WithError(err).Error("error publish comment")
+		return err
+	}
+	return nil
 }

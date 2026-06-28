@@ -1,4 +1,4 @@
-package db
+package pg_repo
 
 import (
 	"context"
@@ -11,11 +11,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Postgres struct {
+type PgRepo struct {
 	DB *sqlx.DB
 }
 
-func NewPostgres(ctx context.Context, cfg *config.PostgresConfig) (*Postgres, error) {
+func NewPostgres(ctx context.Context, cfg *config.PostgresConfig) (*PgRepo, error) {
 	db, err := sqlx.Open("pgx", cfg.Dsn())
 	if err != nil {
 		return nil, fmt.Errorf("postgres: open: %w", err)
@@ -34,5 +34,5 @@ func NewPostgres(ctx context.Context, cfg *config.PostgresConfig) (*Postgres, er
 		return nil, fmt.Errorf("postgres: ping: %w", err)
 	}
 
-	return &Postgres{DB: db}, nil
+	return &PgRepo{DB: db}, nil
 }
